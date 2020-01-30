@@ -26,7 +26,7 @@ public:
 private:
     Map map;
 
-    int m_score = 0;
+    int score = 0;
 
 };
 

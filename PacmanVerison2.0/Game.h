@@ -3,14 +3,14 @@
 #include "Map.h"
 #include "Menu.h"
 #include "Pac.h"
-
+#include "Blinki.h"
 
 class Game
 {
 public:
     Game();
     ~Game();
-    void StartGame();
+    void StartProg();
 
 
 private:
@@ -39,21 +39,22 @@ private:
     static const short RIGHT_ARROW = 77;
 
 
-    //static const short YELLOW = 6;
-
     Map map;
     Menu menu;
-Pac pac;
+    Pac pac;
+    Blinki blinki;
 
     bool m_gameOver;
     bool m_error;
     bool m_save;
-
+    bool m_stop;
     void StartNewGame();
+    void GameDraw();
     void GameSetup();
     void GameInput();
     void GamePause();
     void GameLogic();
+    void LogicBlinki();
 };
 
 #endif // GAME_H

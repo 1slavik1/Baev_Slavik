@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Menu.h"
 #include <iostream>
 #include <windows.h>
@@ -15,6 +16,8 @@ short Menu::ChoiceMenuItemStart(bool error)
 {
     using namespace std;
     system("cls");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, (WORD)((0 << 4) | 7));
     int var;
     char ch[1];
     if (error)
@@ -38,6 +41,8 @@ short Menu::ChoiceMenuItemPause(bool error, bool save)
     using namespace std;
     system("cls");
     //setlocale(LC_ALL, "Rus");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, (WORD)((0 << 4) | 7));
     int var;
     char ch[1];
     if (error)

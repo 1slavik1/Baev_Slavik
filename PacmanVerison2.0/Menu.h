@@ -4,9 +4,9 @@
 
 class Menu
 {
-    public:
-        Menu();
-        ~Menu();
+public:
+    Menu();
+    ~Menu();
 
     short ChoiceMenuItemStart(bool);
     short ChoiceMenuItemPause(bool, bool);

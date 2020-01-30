@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Pac.h"
 #include <Windows.h>
 #include <iostream>
@@ -10,19 +11,14 @@ Pac::~Pac()
 {
 }
 
-int Pac::getScore() const { return m_score; }
-
-
-
-
-
+int Pac::getScore() const { return score; }
 
 void Pac::MoveRight()
 {
     if (map.getMap(x + 1, y) == 0)
     {
-        m_score++;
-        Ghost::DrawScore(m_score);
+        score++;
+        Ghost::DrawScore(score);
         map.setMap(x + 1, y);
     }
     if (map.getMap(x + 1, y) == 1) dir = STOP;
@@ -36,8 +32,8 @@ void Pac::MoveLeft()
 {
     if (map.getMap(x - 1, y) == 0)
     {
-        m_score++;
-        Ghost::DrawScore(m_score);
+        score++;
+        Ghost::DrawScore(score);
         map.setMap(x - 1, y);
     }
     if (map.getMap(x - 1, y) == 1) dir = STOP;
@@ -51,8 +47,8 @@ void Pac::MoveUp()
 {
     if (map.getMap(x, y - 1) == 0)
     {
-        m_score++;
-        Ghost::DrawScore(m_score);
+        score++;
+        Ghost::DrawScore(score);
         map.setMap(x, y - 1);
     }
     if (map.getMap(x, y - 1) == 1) dir = STOP;
@@ -66,8 +62,8 @@ void Pac::MoveDown()
 {
     if (map.getMap(x, y + 1) == 0)
     {
-        m_score++;
-        Ghost::DrawScore(m_score);
+        score++;
+        Ghost::DrawScore(score);
         map.setMap(x, y + 1);
     }
     if (map.getMap(x, y + 1) == 1) dir = STOP;

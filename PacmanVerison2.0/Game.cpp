@@ -1,10 +1,12 @@
+#include "pch.h"
 #include "Game.h"
 #include <iostream>
 #include <conio.h>
-
-
+#include <thread>
+//#include <chrono>
 Game::Game()
 {
+    m_stop = false;
 }
 
 
@@ -12,7 +14,7 @@ Game::~Game()
 {
 }
 
-void Game::StartGame()
+void Game::StartProg()
 {
     bool error = false;
     while (true)
@@ -48,9 +50,13 @@ void Game::StartGame()
 
 void Game::StartNewGame()
 {
+
     GameSetup();
+    std::thread th(&Game::LogicBlinki,this);
+    th.detach();
     while (!m_gameOver)
     {
+
         GameInput();
         GameLogic();
 
@@ -65,10 +71,25 @@ void Game::GameSetup()
 
     map.DrawMap();
     std::cout << "\nScore = " << pac.getScore() << std::endl;
-    pac.DrawPlayer(pac.YELLOW, 'P', pac.XSTARTPAC, pac.YSTARTPAC);
+
+    pac.DrawPlayer(pac.YELLOW, pac.NAME, pac.XSTARTPAC, pac.YSTARTPAC);
     pac.dir = pac.STOP;
     pac.x = pac.XSTARTPAC;
     pac.y = pac.YSTARTPAC;
+
+    blinki.DrawPlayer(blinki.RED, blinki.NAME, blinki.XSTARTBLINKI, blinki.YSTARTBLINKI);
+    blinki.setX(blinki.XSTARTBLINKI);
+    blinki.setY(blinki.YSTARTBLINKI);
+
+}
+
+void Game::GameDraw()
+{
+
+    map.DrawMap();
+    std::cout << "\nScore = " << pac.getScore() << std::endl;
+    pac.DrawPlayer(pac.YELLOW, pac.NAME, pac.x, pac.y);
+    blinki.DrawPlayer(blinki.RED, blinki.NAME, blinki.getX(), blinki.getY());
 }
 
 void Game::GameInput()
@@ -108,6 +129,7 @@ void Game::GameInput()
 void Game::GamePause()
 {
     using namespace std;
+    m_stop = true;
     do
     {
         int var = menu.ChoiceMenuItemPause(m_error, m_save);
@@ -115,6 +137,8 @@ void Game::GamePause()
         m_save = false;
         if (var == 1)
         {
+            m_stop = false;
+            GameDraw();
             break;
         }
         else if (var == 2)
@@ -160,11 +184,25 @@ void Game::GamePause()
 void Game::GameLogic()
 {
 
-    if(pac.dir==pac.UP) pac.MoveUp();
-    else if (pac.dir==pac.DOWN) pac.MoveDown();
-    else if (pac.dir==pac.LEFT) pac.MoveLeft();
-    else if (pac.dir==pac.RIGHT) pac.MoveRight();
+    if (pac.dir == pac.UP) pac.MoveUp();
+    else if (pac.dir == pac.DOWN) pac.MoveDown();
+    else if (pac.dir == pac.LEFT) pac.MoveLeft();
+    else if (pac.dir == pac.RIGHT) pac.MoveRight();
+
+
 
     if (pac.x == 49 - 1) pac.x = 1;
     else if (pac.x == 0) pac.x = 49 - 2;
+
+
+}
+
+void Game::LogicBlinki()
+{
+    while (true)
+    {
+        if (!m_stop) blinki.Logic(pac.x, pac.y);
+
+    }
+
 }
