@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Ghost.h"
 #include <iostream>
+#include <cmath>
 
 Ghost::Ghost()
 {
@@ -19,9 +20,13 @@ short Ghost::getX() const { return m_x; }
 void Ghost::setY(short y) { m_y = y; }
 short Ghost::getY() const { return m_y; }
 
+void Ghost::setMode(short mode) { m_mode = mode; }
+short Ghost::getMode() const { return m_mode; }
 
+void Ghost::setFreedom(bool freedom) { m_freedom = freedom; }
+void Ghost::setStart(bool start) { m_start = start; }
 
-void Ghost::DrawPlayer(short color, char name, short x, short y)
+void Ghost::DrawPlayer(short x, short y)
 {
     draw.DrawPlayer(color, name, x, y);
 }
@@ -50,59 +55,60 @@ inline void Ghost::writeOldState(int oldX, int oldY)
     m_oldY = oldY;
 }
 
-void Ghost::MoveRight(short color, char name)
+void Ghost::MoveRight()
 {
     if (map.getMap(m_x + 1, m_y) != 1)
     {
         writeOldState(m_x, m_y);
         m_x++;
-        Ghost::DrawPlayer(color, name, m_x, m_y);
-        Sleep(150);
+        Ghost::DrawPlayer(m_x, m_y);
     }
-    //if (map.getMap(m_x - 1, m_y, 2) != 1) Ghost::ClearPlayer(m_x - 1, m_y);
     if (map.getMap(m_x - 1, m_y) != 1) Ghost::ClearAndDrawScore(map.getMap(m_x - 1, m_y), m_x - 1, m_y);
+    Sleep(150);
 }
 
-void Ghost::MoveLeft(short color, char name)
+void Ghost::MoveLeft()
 {
     if (map.getMap(m_x - 1, m_y) != 1)
     {
         writeOldState(m_x, m_y);
         m_x--;
-        Ghost::DrawPlayer(color, name, m_x, m_y);
-        Sleep(150);
+        Ghost::DrawPlayer(m_x, m_y);
+        
     }
-    //if (map.getMap(m_x + 1, m_y, 2) != 1) Ghost::ClearPlayer(m_x + 1, m_y);
     if (map.getMap(m_x + 1, m_y) != 1) Ghost::ClearAndDrawScore(map.getMap(m_x + 1, m_y), m_x + 1, m_y);
+    Sleep(150);
 }
 
-void Ghost::MoveUp(short color, char name)
+void Ghost::MoveUp()
 {
     if (map.getMap(m_x, m_y - 1) != 1)
     {
         writeOldState(m_x, m_y);
         m_y--;
-        Ghost::DrawPlayer(color, name, m_x, m_y);
-        Sleep(150);
+        Ghost::DrawPlayer(m_x, m_y);
+        
     }
-    if (map.getMap(m_x, m_y + 1) != 1) Ghost::ClearPlayer(m_x, m_y + 1);
+    if (map.getMap(m_x, m_y + 1) != 1) Ghost::ClearAndDrawScore(map.getMap(m_x, m_y + 1), m_x, m_y + 1);
+    Sleep(150);
 }
 
-void Ghost::MoveDown(short color, char name)
+void Ghost::MoveDown()
 {
     if (map.getMap(m_x, m_y + 1) != 1)
     {
         writeOldState(m_x, m_y);
         m_y++;
-        Ghost::DrawPlayer(color, name, m_x, m_y);
-        Sleep(150);
+        Ghost::DrawPlayer(m_x, m_y);
+        
     }
-    if (map.getMap(m_x, m_y - 1) != 1) Ghost::ClearPlayer(m_x, m_y - 1);
+    if (map.getMap(m_x, m_y - 1) != 1) Ghost::ClearAndDrawScore(map.getMap(m_x, m_y - 1), m_x, m_y - 1);
+    Sleep(150);
 }
 
 
 
-void Ghost::Logic(int xPac, int yPac, short color, char name)
+void Ghost::chase(int xPac, int yPac)
 {
     if (m_y >= 10 && m_y <= 14 && m_x >= 21 && m_x <= 31)
     {
@@ -115,7 +121,7 @@ void Ghost::Logic(int xPac, int yPac, short color, char name)
         else if (map.getMap(m_x, m_y - 1) != 1)
         {
             m_y--;
-            Ghost::DrawPlayer(color, name, m_x, m_y);            
+            Ghost::DrawPlayer(m_x, m_y);            
             Sleep(150);
         }
         if (map.getMap(m_x, m_y + 1) != 1) Ghost::ClearPlayer(m_x, m_y + 1);
@@ -129,246 +135,340 @@ void Ghost::Logic(int xPac, int yPac, short color, char name)
         //start ghost on left
         if (!m_start)
         {
-            Ghost::MoveLeft(color, name);
+            Ghost::MoveLeft();
             m_start = true;
+        }
+        else if ((m_x == 48 && m_y == 10) || (m_x == 0 && m_y == 10))
+        {
+            Ghost::tunel();
         }
         else if (map.getMap(m_x, m_y + 1) == 1 && map.getMap(m_x, m_y - 1) == 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) != 1)
         {
-            Ghost::upDownClose(color, name);
+            Ghost::upDownClose();
         }
         else if (map.getMap(m_x, m_y + 1) != 1 && map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) == 1 && map.getMap(m_x - 1, m_y) == 1)
         {
-            Ghost::leftRightClose(color, name);
+            Ghost::leftRightClose();
         }
 
         else if (map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) == 1)
         {
-            Ghost::downClose(xPac, yPac, color, name);
+            Ghost::downClose(xPac, yPac);
         }
 
         else if (map.getMap(m_x, m_y - 1) == 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) != 1)
         {
-            Ghost::upClose(xPac, yPac, color, name);
+            Ghost::upClose(xPac, yPac);
         }
 
         else if (map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) == 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) != 1)
         {
-            Ghost::rightClose(xPac, yPac, color, name);
+            Ghost::rightClose(xPac, yPac);
         }
 
         else if (map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) == 1 && map.getMap(m_x, m_y + 1) != 1)
         {
-            Ghost::leftClose(xPac, yPac, color, name);
+            Ghost::leftClose(xPac, yPac);
         }
 
         else if (map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) != 1)
         {
-            Ghost::allClose(xPac, yPac, color, name);
+            Ghost::allClose(xPac, yPac);
         }
 
         else if (map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) == 1 && map.getMap(m_x, m_y + 1) == 1)
         {
-            Ghost::leftDownClose(color, name);
+            Ghost::leftDownClose();
         }
 
         else if (map.getMap(m_x, m_y - 1) == 1 && map.getMap(m_x + 1, m_y) != 1 && map.getMap(m_x - 1, m_y) == 1 && map.getMap(m_x, m_y + 1) != 1)
         {
-            Ghost::leftUpClose(color, name);
+            Ghost::leftUpClose();
         }
 
         else if (map.getMap(m_x, m_y - 1) == 1 && map.getMap(m_x + 1, m_y) == 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) != 1)
         {
-            Ghost::rightUpClose(color, name);
+            Ghost::rightUpClose();
         }
 
-        else if (map.getMap(m_x, m_y - 1) == 0 && map.getMap(m_x + 1, m_y) == 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) == 1)
+        else if (map.getMap(m_x, m_y - 1) != 1 && map.getMap(m_x + 1, m_y) == 1 && map.getMap(m_x - 1, m_y) != 1 && map.getMap(m_x, m_y + 1) == 1)
         {
-            Ghost::rightDownClose(color, name);
+            Ghost::rightDownClose();
         }
 
     }
 }
 
-void Ghost::upDownClose(short color, char name)
+void Ghost::tunel()
 {
     //Came on the LEFT
     if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-        Ghost::MoveLeft(color, name);
+        writeOldState(0, 10);
+        m_x = 1;
+        Ghost::ClearAndDrawScore(map.getMap(48, 10), 48, 10);
     }
     //Came on the RIGHT
     else if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        Ghost::MoveLeft(color, name);
+        writeOldState(48, 10);
+        m_x = 47;
+        Ghost::ClearAndDrawScore(map.getMap(0, 10), 0, 10);
     }
 }
 
-void Ghost::leftRightClose(short color, char name)
+void Ghost::upDownClose()
+{
+    //Came on the LEFT
+    if (m_x - 1 == m_oldX && m_y == m_oldY)
+    {
+        Ghost::MoveRight();
+    }
+    //Came on the RIGHT
+    else if (m_x + 1 == m_oldX && m_y == m_oldY)
+    {
+        Ghost::MoveLeft();
+    }
+}
+
+void Ghost::leftRightClose()
 {
     //Came on the UP
     if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-        
+        Ghost::MoveDown();
     }
     //Came on the DOWN
     else if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-       
+        Ghost::MoveUp();
     }
 }
 
-void Ghost::downClose(short xPac, short yPac, short color, char name)
+void Ghost::downClose(short xPac, short yPac)
 {
     //Came on the RIGHT
     if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveUp();
+        else MoveLeft();
     }
     //Came on the LEFT
     else if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveUp();
+        else MoveRight();
     }
     //Came on the UP
     else if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+        double b = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveRight();
+        else MoveLeft();
     }
 }
 
-void Ghost::upClose(short xPac, short yPac, short color, char name)
+void Ghost::upClose(short xPac, short yPac)
 {
     //Came on the RIGHT
     if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+        double b = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveDown();
+        else MoveLeft();
     }
     //Came on the LEFT
     else if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-       
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+        double b = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveDown();
+        else MoveRight();
     }
     //Came on the DOWN
     else if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+        double b = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveLeft();
+        else MoveRight();
     }
 }
 
-void Ghost::rightClose(short xPac, short yPac, short color, char name)
+void Ghost::rightClose(short xPac, short yPac)
 {
     //Came on the DOWN
     if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveUp();
+        else MoveLeft();
     }
     //Came on the LEFT
     else if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+
+        if (a < b) MoveUp();
+        else MoveDown();
     }
     //Came on the UP
     else if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+        double b = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveDown();
+        else MoveLeft();
     }
 }
 
-void Ghost::leftClose(short xPac, short yPac, short color, char name)
+void Ghost::leftClose(short xPac, short yPac)
 {
     //Came on the DOWN
     if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+
+        if (a < b) MoveUp();
+        else MoveRight();
     }
     //Came on the RIGHT
     else if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+
+        if (a < b) MoveUp();
+        else MoveDown();
     }
     //Came on the UP
     else if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-       
+        double a = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+
+        if (a < b) MoveRight();
+        else MoveDown();
     }
 }
 
-void Ghost::allClose(short xPac, short yPac, short color, char name)
+void Ghost::allClose(short xPac, short yPac)
 {
     //Came on the RIGHT
     if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+        double c = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if ((a < b && a < c) || (a == b)) MoveUp();
+        else if ((b < a && b < c) || (b == c)) MoveDown();
+        else if ((c < a && c < b) || (c == a)) MoveLeft();
     }
     //Came on the LEFT
     else if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+        double c = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+
+        if ((a < b && a < c) || (a == b)) MoveUp();
+        else if ((b < a && b < c) || (b == c)) MoveDown();
+        else if ((c < a && c < b) || (c == a)) MoveRight();
     }
     //Came on the UP
     else if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-      
+        double a = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y + 1), 2)));
+        double c = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if ((a < b && a < c) || (a == b)) MoveRight();
+        else if ((b < a && b < c) || (b == c)) MoveDown();
+        else if ((c < a && c < b) || (c == a)) MoveLeft();
     }
     //Came on the DOWN
     else if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-        
+        double a = sqrt(pow(xPac - (m_x + 1), 2) + (pow(yPac - m_y, 2)));
+        double b = sqrt(pow(xPac - m_x, 2) + (pow(yPac - (m_y - 1), 2)));
+        double c = sqrt(pow(xPac - (m_x - 1), 2) + (pow(yPac - m_y, 2)));
+
+        if ((a < b && a < c) || (a == b)) MoveRight();
+        else if ((b < a && b < c) || (b == c)) MoveUp();
+        else if ((c < a && c < b) || (c == a)) MoveLeft();
     }
 }
 
-void Ghost::leftDownClose(short color, char name)
+void Ghost::leftDownClose()
 {
     //Came on the RIGHT
     if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        
+        Ghost::MoveUp();
     }
     //Came on the UP
     else if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-        
+        Ghost::MoveRight();
     }
 }
 
-void Ghost::leftUpClose(short color, char name)
+void Ghost::leftUpClose()
 {
     //Came on the RIGHT
     if (m_x + 1 == m_oldX && m_y == m_oldY)
     {
-        Ghost::MoveDown(color, name);
+        Ghost::MoveDown();
     }
     //Came on the DOWN
     else if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-        Ghost::MoveRight(color, name);
+        Ghost::MoveRight();
     }
 }
 
-void Ghost::rightUpClose(short color, char name)
+void Ghost::rightUpClose()
 {
     //Came on the LEFT
     if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-        
+        Ghost::MoveDown();
     }
     //Came on the DOWN
     else if (m_x == m_oldX && m_y + 1 == m_oldY)
     {
-        
+        Ghost::MoveLeft();
     }
 }
 
-void Ghost::rightDownClose(short color, char name)
+void Ghost::rightDownClose()
 {
     //Came on the LEFT
     if (m_x - 1 == m_oldX && m_y == m_oldY)
     {
-        
+        Ghost::MoveUp();
     }
     //Came on the UP
     else if (m_x == m_oldX && m_y - 1 == m_oldY)
     {
-        
+        Ghost::MoveLeft();
     }
 }

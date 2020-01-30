@@ -13,13 +13,13 @@ public:
     static const short YSTARTBLINKI = 12;
     static const char NAME = 'B';
     void Logic(int xPac, int yPac);
-    //short x, y;
+    
 
 
 private:
-    //Map map;
-    //bool freedom;
-    //bool m_start;
+    const short X = 48;
+    const short Y = 0;
+   
 };
 
 #endif // BLINKI_H

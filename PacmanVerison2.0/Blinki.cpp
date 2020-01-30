@@ -3,17 +3,32 @@
 #include <Windows.h>
 Blinki::Blinki()
 {
-    //ctor
-    //freedom = false;
+    Ghost::color = RED;
+    Ghost::name = NAME;
 }
 
 Blinki::~Blinki()
 {
-    //dtor
+
 }
 
 void Blinki::Logic(int xPac, int yPac)
 {
-    Ghost::Logic(xPac, yPac, RED, NAME);
+    //Ghost::Logic(xPac, yPac);
+
+    switch (getMode())
+    {
+    case Ghost::SCATTER:
+        Ghost::chase(X, Y); // SCATTER
+        break;
+    case Ghost::CHASE:
+        Ghost::chase(xPac, yPac);
+        break;
+    case Ghost::FRIGHTENED:
+        //chase(Ghost::getXRandom(), Ghost::getYRandom()); // FRIGHTENED
+        break;
+    default:
+        break;
+    }
 }
 

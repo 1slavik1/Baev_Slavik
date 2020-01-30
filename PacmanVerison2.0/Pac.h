@@ -24,7 +24,7 @@ public:
     int getScore() const;
 
 private:
-    Map map;
+    //Map map;
 
     int score = 0;
 

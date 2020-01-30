@@ -4,7 +4,7 @@
 #include "Menu.h"
 #include "Pac.h"
 #include "Blinki.h"
-
+#include "Timer.h"
 class Game
 {
 public:
@@ -43,6 +43,7 @@ private:
     Menu menu;
     Pac pac;
     Blinki blinki;
+    Timer timer;
 
     bool m_gameOver;
     bool m_error;
@@ -55,6 +56,8 @@ private:
     void GamePause();
     void GameLogic();
     void LogicBlinki();
+    void StartTimer();
+    void Volna();
 };
 
 #endif // GAME_H

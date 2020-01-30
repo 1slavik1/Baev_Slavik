@@ -4,6 +4,8 @@
 #include <iostream>
 Pac::Pac()
 {
+    Ghost::color = YELLOW;
+    Ghost::name = NAME;
 }
 
 
@@ -23,7 +25,7 @@ void Pac::MoveRight()
     }
     if (map.getMap(x + 1, y) == 1) dir = STOP;
     else x++;
-    Ghost::DrawPlayer(YELLOW, NAME, x, y);
+    Ghost::DrawPlayer(x, y);
     if (map.getMap(x - 1, y) != 1) Ghost::ClearPlayer(x - 1, y);
     Sleep(150);
 }
@@ -38,7 +40,7 @@ void Pac::MoveLeft()
     }
     if (map.getMap(x - 1, y) == 1) dir = STOP;
     else x--;
-    Ghost::DrawPlayer(YELLOW, NAME, x, y);
+    Ghost::DrawPlayer(x, y);
     if (map.getMap(x + 1, y) != 1) Ghost::ClearPlayer(x + 1, y);
     Sleep(150);
 }
@@ -53,7 +55,7 @@ void Pac::MoveUp()
     }
     if (map.getMap(x, y - 1) == 1) dir = STOP;
     else y--;
-    Ghost::DrawPlayer(YELLOW, NAME, x, y);
+    Ghost::DrawPlayer(x, y);
     if (map.getMap(x, y + 1) != 1) Ghost::ClearPlayer(x, y + 1);
     Sleep(150);
 }
@@ -68,7 +70,7 @@ void Pac::MoveDown()
     }
     if (map.getMap(x, y + 1) == 1) dir = STOP;
     else y++;
-    Ghost::DrawPlayer(YELLOW, NAME, x, y);
+    Ghost::DrawPlayer(x, y);
     if (map.getMap(x, y - 1) != 1) Ghost::ClearPlayer(x, y - 1);
     Sleep(150);
 }

@@ -52,8 +52,11 @@ void Game::StartNewGame()
 {
 
     GameSetup();
-    std::thread th(&Game::LogicBlinki,this);
-    th.detach();
+    std::thread threadBlinki(&Game::LogicBlinki,this);
+    threadBlinki.detach();
+    std::thread threadTimer(&Game::StartTimer, this);
+    threadTimer.detach();
+
     while (!m_gameOver)
     {
 
@@ -72,12 +75,13 @@ void Game::GameSetup()
     map.DrawMap();
     std::cout << "\nScore = " << pac.getScore() << std::endl;
 
-    pac.DrawPlayer(pac.YELLOW, pac.NAME, pac.XSTARTPAC, pac.YSTARTPAC);
+    pac.DrawPlayer(pac.XSTARTPAC, pac.YSTARTPAC);
     pac.dir = pac.STOP;
     pac.x = pac.XSTARTPAC;
     pac.y = pac.YSTARTPAC;
 
-    blinki.DrawPlayer(blinki.RED, blinki.NAME, blinki.XSTARTBLINKI, blinki.YSTARTBLINKI);
+    
+    blinki.DrawPlayer(blinki.XSTARTBLINKI, blinki.YSTARTBLINKI);
     blinki.setX(blinki.XSTARTBLINKI);
     blinki.setY(blinki.YSTARTBLINKI);
 
@@ -88,8 +92,8 @@ void Game::GameDraw()
 
     map.DrawMap();
     std::cout << "\nScore = " << pac.getScore() << std::endl;
-    pac.DrawPlayer(pac.YELLOW, pac.NAME, pac.x, pac.y);
-    blinki.DrawPlayer(blinki.RED, blinki.NAME, blinki.getX(), blinki.getY());
+    pac.DrawPlayer(pac.x, pac.y);
+    blinki.DrawPlayer(blinki.getX(), blinki.getY());
 }
 
 void Game::GameInput()
@@ -189,18 +193,107 @@ void Game::GameLogic()
     else if (pac.dir == pac.LEFT) pac.MoveLeft();
     else if (pac.dir == pac.RIGHT) pac.MoveRight();
 
-
-
     if (pac.x == 49 - 1) pac.x = 1;
     else if (pac.x == 0) pac.x = 49 - 2;
 
+    if (pac.x == blinki.getX() && pac.y == blinki.getY())
+    {
+        //if (!m_frightened) 
+            pac.life--;
+        //if (frightened) score+=100;
+       
+        blinki.writeOldState(blinki.getX(), blinki.getY());
 
+        blinki.setFreedom(false);
+        blinki.setStart(false);
+
+        blinki.setX(blinki.XSTARTBLINKI);
+        blinki.setY(blinki.YSTARTBLINKI);
+    }
+
+}
+
+void Game::Volna()
+{
+    if (timer.getTime() <= 7)
+    {
+        blinki.setMode(1);
+        /*pinki.setMode(1);
+        inki.setMode(1);
+        klayd.setMode(1);*/
+    }
+    else if (timer.getTime() <= 27)
+    {
+        blinki.setMode(2);
+        /*pinki.setMode(2);
+        inki.setMode(2);
+        klayd.setMode(2);*/
+    }
+    else if (timer.getTime() <= 34)
+    {
+        blinki.setMode(1);
+        /*pinki.setMode(1);
+        inki.setMode(1);
+        klayd.setMode(1);*/
+    }
+    else if (timer.getTime() <= 54)
+    {
+        blinki.setMode(2);
+        /*pinki.setMode(2);
+        inki.setMode(2);
+        klayd.setMode(2);*/
+    }
+    else if (timer.getTime() <= 59)
+    {
+        blinki.setMode(1);
+        /*pinki.setMode(1);
+        inki.setMode(1);
+        klayd.setMode(1);*/
+    }
+    else if (timer.getTime() <= 79)
+    {
+        blinki.setMode(2);
+       /* pinki.setMode(2);
+        inki.setMode(2);
+        klayd.setMode(2);*/
+    }
+    else if (timer.getTime() <= 84)
+    {
+        blinki.setMode(1);
+        /*pinki.setMode(1);
+        inki.setMode(1);
+        klayd.setMode(1);*/
+    }
+    else
+    {
+        blinki.setMode(2);
+        /*pinki.setMode(2);
+        inki.setMode(2);
+        klayd.setMode(2);*/
+    }
+
+    /*if (m_frightened && m_countFrightened != 100)
+    {
+        blinki.setMode(3);
+        pinki.setMode(3);
+        inki.setMode(3);
+        klayd.setMode(3);
+    }*/
+}
+
+void Game::StartTimer()
+{
+    while (true)
+    {
+        if (!m_stop) timer.startTimer();
+    }
 }
 
 void Game::LogicBlinki()
 {
     while (true)
     {
+        Game::Volna();
         if (!m_stop) blinki.Logic(pac.x, pac.y);
 
     }
