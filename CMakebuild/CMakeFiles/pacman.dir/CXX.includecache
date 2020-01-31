@@ -55,6 +55,10 @@ conio.h
 -
 thread
 -
+fstream
+-
+string
+-
 
 D:/C++/GAME/PacMan/newpacman/Main/Game.h
 Map.h
@@ -83,6 +87,8 @@ Draw.h
 D:/C++/GAME/PacMan/newpacman/Main/Draw.h
 Map.h
 D:/C++/GAME/PacMan/newpacman/Main/Map.h
+Timer.h
+D:/C++/GAME/PacMan/newpacman/Main/Timer.h
 
 D:/C++/GAME/PacMan/newpacman/Main/Main.cpp
 pch.h
@@ -138,6 +144,8 @@ D:/C++/GAME/PacMan/newpacman/Main/Timer.h
 chrono
 -
 thread
+-
+iostream
 -
 
 D:/C++/GAME/PacMan/newpacman/Main/Timer.h

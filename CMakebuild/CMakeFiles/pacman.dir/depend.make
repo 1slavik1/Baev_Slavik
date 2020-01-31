@@ -7,6 +7,7 @@ CMakeFiles/pacman.dir/Blinki.cpp.obj: ../Cursor.h
 CMakeFiles/pacman.dir/Blinki.cpp.obj: ../Draw.h
 CMakeFiles/pacman.dir/Blinki.cpp.obj: ../Ghost.h
 CMakeFiles/pacman.dir/Blinki.cpp.obj: ../Map.h
+CMakeFiles/pacman.dir/Blinki.cpp.obj: ../Timer.h
 CMakeFiles/pacman.dir/Blinki.cpp.obj: ../pch.h
 
 CMakeFiles/pacman.dir/Cursor.cpp.obj: ../Cursor.cpp
@@ -35,6 +36,7 @@ CMakeFiles/pacman.dir/Ghost.cpp.obj: ../Draw.h
 CMakeFiles/pacman.dir/Ghost.cpp.obj: ../Ghost.cpp
 CMakeFiles/pacman.dir/Ghost.cpp.obj: ../Ghost.h
 CMakeFiles/pacman.dir/Ghost.cpp.obj: ../Map.h
+CMakeFiles/pacman.dir/Ghost.cpp.obj: ../Timer.h
 CMakeFiles/pacman.dir/Ghost.cpp.obj: ../pch.h
 
 CMakeFiles/pacman.dir/Main.cpp.obj: ../Blinki.h
@@ -65,6 +67,7 @@ CMakeFiles/pacman.dir/Pac.cpp.obj: ../Ghost.h
 CMakeFiles/pacman.dir/Pac.cpp.obj: ../Map.h
 CMakeFiles/pacman.dir/Pac.cpp.obj: ../Pac.cpp
 CMakeFiles/pacman.dir/Pac.cpp.obj: ../Pac.h
+CMakeFiles/pacman.dir/Pac.cpp.obj: ../Timer.h
 CMakeFiles/pacman.dir/Pac.cpp.obj: ../pch.h
 
 CMakeFiles/pacman.dir/Timer.cpp.obj: ../Timer.cpp

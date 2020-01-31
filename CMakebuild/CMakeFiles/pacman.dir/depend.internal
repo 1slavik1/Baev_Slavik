@@ -8,6 +8,7 @@ CMakeFiles/pacman.dir/Blinki.cpp.obj
  D:/C++/GAME/PacMan/newpacman/Main/Draw.h
  D:/C++/GAME/PacMan/newpacman/Main/Ghost.h
  D:/C++/GAME/PacMan/newpacman/Main/Map.h
+ D:/C++/GAME/PacMan/newpacman/Main/Timer.h
  D:/C++/GAME/PacMan/newpacman/Main/pch.h
 CMakeFiles/pacman.dir/Cursor.cpp.obj
  D:/C++/GAME/PacMan/newpacman/Main/Cursor.cpp
@@ -36,6 +37,7 @@ CMakeFiles/pacman.dir/Ghost.cpp.obj
  D:/C++/GAME/PacMan/newpacman/Main/Ghost.cpp
  D:/C++/GAME/PacMan/newpacman/Main/Ghost.h
  D:/C++/GAME/PacMan/newpacman/Main/Map.h
+ D:/C++/GAME/PacMan/newpacman/Main/Timer.h
  D:/C++/GAME/PacMan/newpacman/Main/pch.h
 CMakeFiles/pacman.dir/Main.cpp.obj
  D:/C++/GAME/PacMan/newpacman/Main/Blinki.h
@@ -66,6 +68,7 @@ CMakeFiles/pacman.dir/Pac.cpp.obj
  D:/C++/GAME/PacMan/newpacman/Main/Map.h
  D:/C++/GAME/PacMan/newpacman/Main/Pac.cpp
  D:/C++/GAME/PacMan/newpacman/Main/Pac.h
+ D:/C++/GAME/PacMan/newpacman/Main/Timer.h
  D:/C++/GAME/PacMan/newpacman/Main/pch.h
 CMakeFiles/pacman.dir/Timer.cpp.obj
  D:/C++/GAME/PacMan/newpacman/Main/Timer.cpp
