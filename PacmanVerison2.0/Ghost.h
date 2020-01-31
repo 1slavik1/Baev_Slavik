@@ -3,6 +3,7 @@
 
 #include "Draw.h"
 #include "Map.h"
+#include "Timer.h"
 class Ghost
 {
 public:
@@ -10,21 +11,25 @@ public:
     virtual ~Ghost();
 
     Draw draw;
-
+    bool m_frightened;
     void setX(short x);
     short getX() const;
     void setY(short y);
     short getY() const;
+    short getOldX() const;
+    short getOldY() const;
     void setMode(short mode);
     short getMode() const;
     void setFreedom(bool freedom);
     void setStart(bool start);
     void DrawScore(int &score);
+    void DrawLife(short life);
     void ClearPlayer(short x, short y);    
     void ClearAndDrawScore(short item_map, short x, short y);
     void DrawPlayer(short x, short y);
     inline void writeOldState(int oldX, int oldY);
-  
+    //static void setColorBlue();
+    
     
 
 protected:
@@ -34,12 +39,14 @@ protected:
     static const short FRIGHTENED = 3;
 
     Map map;
+    
 
     short color;
     char name;
-
-    void chase(int xPac, int yPac);
     
+    void chase(int xPac, int yPac);
+    virtual short getXRandom();
+    virtual short getYRandom();
 
 
 

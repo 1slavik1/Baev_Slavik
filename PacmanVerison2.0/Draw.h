@@ -11,6 +11,8 @@ public:
     void SetClearAndDrawScore(short map, short x, short y);
     void Clear(short x, short y);
     void SetDrawScore();
+    void setDrawLife();
+    void setDrawTime();
     
     
 private:

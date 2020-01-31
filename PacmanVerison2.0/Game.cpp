@@ -3,6 +3,8 @@
 #include <iostream>
 #include <conio.h>
 #include <thread>
+#include <fstream>
+#include <string>
 //#include <chrono>
 Game::Game()
 {
@@ -30,9 +32,9 @@ void Game::StartProg()
         case CONTINUE:
             //ContinueGame(map);
             break;
-
+         
         case STATISTICS:
-            //OutputStat();
+            OutputStat();
             break;
 
         case EXIT:
@@ -71,10 +73,15 @@ void Game::GameSetup()
     m_gameOver = false;
     m_error = false;
     m_save = false;
-
+    pac.setLife(3);
+    pac.setScore();
+    timer.timerReset();
+    map.mapUpdate();
     map.DrawMap();
-    std::cout << "\nScore = " << pac.getScore() << std::endl;
 
+    std::cout << "\nScore = " << pac.getScore();
+    std::cout << "\nLife - " << pac.getLife();
+    
     pac.DrawPlayer(pac.XSTARTPAC, pac.YSTARTPAC);
     pac.dir = pac.STOP;
     pac.x = pac.XSTARTPAC;
@@ -91,9 +98,11 @@ void Game::GameDraw()
 {
 
     map.DrawMap();
-    std::cout << "\nScore = " << pac.getScore() << std::endl;
+    std::cout << "\nScore = " << pac.getScore();
+    std::cout << "\nLife - " << pac.getLife();
     pac.DrawPlayer(pac.x, pac.y);
     blinki.DrawPlayer(blinki.getX(), blinki.getY());
+    
 }
 
 void Game::GameInput()
@@ -147,29 +156,29 @@ void Game::GamePause()
         }
         else if (var == 2)
         {
-            /*ofstream out("save.txt");
-            out << pac.life << endl;
-            out << m_score << endl;
-            out << m_countLevel << endl;
-            out << pac.X_Pac << " " << pac.Y_Pac << endl;
+            ofstream out("save.txt");
+            out << pac.getLife() << endl;
+            out << pac.getScore() << endl;
+            //out << m_countLevel << endl;
+            out << pac.x << " " << pac.y << endl;
             out << blinki.getX() << " " << blinki.getY() << endl;
             out << blinki.getOldX() << " " << blinki.getOldY() << endl;
-            out << pinki.getX() << " " << pinki.getY() << endl;
+            /*out << pinki.getX() << " " << pinki.getY() << endl;
             out << pinki.getOldX() << " " << pinki.getOldY() << endl;
             out << inki.getX() << " " << inki.getY() << endl;
             out << inki.getOldX() << " " << inki.getOldY() << endl;
             out << klayd.getX() << " " << klayd.getY() << endl;
-            out << klayd.getOldX() << " " << klayd.getOldY() << endl;
+            out << klayd.getOldX() << " " << klayd.getOldY() << endl;*/
 
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < map.getHeight(); i++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 0; j < map.getWidth(); j++)
                 {
-                    out << map[i][j];
+                    out << map.getMap(j,i);
                 }
                 out << endl;
             }
-            out.close();*/
+            out.close();
             m_save = true;
         }
         else if (var == 3)
@@ -187,7 +196,7 @@ void Game::GamePause()
 
 void Game::GameLogic()
 {
-
+    
     if (pac.dir == pac.UP) pac.MoveUp();
     else if (pac.dir == pac.DOWN) pac.MoveDown();
     else if (pac.dir == pac.LEFT) pac.MoveLeft();
@@ -196,26 +205,44 @@ void Game::GameLogic()
     if (pac.x == 49 - 1) pac.x = 1;
     else if (pac.x == 0) pac.x = 49 - 2;
 
-    if (pac.x == blinki.getX() && pac.y == blinki.getY())
+    if (pac.getLife() <= 0) 
     {
-        //if (!m_frightened) 
-            pac.life--;
-        //if (frightened) score+=100;
-       
-        blinki.writeOldState(blinki.getX(), blinki.getY());
-
-        blinki.setFreedom(false);
-        blinki.setStart(false);
-
-        blinki.setX(blinki.XSTARTBLINKI);
-        blinki.setY(blinki.YSTARTBLINKI);
+        using namespace std;
+        m_gameOver = true;
+        string name;
+        system("cls");
+        cout << "You got = " << pac.getScore() << " points" << "\nInput your name: ";
+        cin.get();
+        getline(cin, name);
+        ofstream out("stat.txt", ios::app);
+        out << name << ": " << pac.getScore() << endl;
+        //out << name << endl;
+        out.close();
     }
+    if (pac.m_frightened && m_count == 0)
+    {
+        timer.timerReset();
+        blinki.m_frightened = true;
+        m_count = 1;
+    }
+
+    if (pac.m_frightened && timer.getTime() >= 10)
+    {
+        m_count = 0;
+        pac.m_frightened = false;
+        blinki.m_frightened = false;
+    }
+   
 
 }
 
 void Game::Volna()
 {
-    if (timer.getTime() <= 7)
+    if (pac.m_frightened && timer.getTime() < 10)
+    {
+        blinki.setMode(3);
+    }
+    else if (timer.getTime() <= 7)
     {
         blinki.setMode(1);
         /*pinki.setMode(1);
@@ -272,6 +299,7 @@ void Game::Volna()
         klayd.setMode(2);*/
     }
 
+    
     /*if (m_frightened && m_countFrightened != 100)
     {
         blinki.setMode(3);
@@ -283,19 +311,72 @@ void Game::Volna()
 
 void Game::StartTimer()
 {
-    while (true)
+    while (!m_gameOver)
     {
-        if (!m_stop) timer.startTimer();
+        if(!m_stop) timer.startTimer();
+        //timer.DrawTime();
     }
+ 
 }
 
 void Game::LogicBlinki()
 {
-    while (true)
+    while (!m_gameOver)
     {
         Game::Volna();
-        if (!m_stop) blinki.Logic(pac.x, pac.y);
+        if (!m_stop)
+        {
+            blinki.Logic(pac.x, pac.y);
+            if (pac.x == blinki.getX() && pac.y == blinki.getY())
+            {
+                if (!blinki.m_frightened)
+                {
+                    pac.changeLife();
+                    pac.DrawLife(pac.getLife());
+                }
+                if (blinki.m_frightened) pac.changeScore(100);
+
+                blinki.writeOldState(blinki.getX(), blinki.getY());
+
+                blinki.setFreedom(false);
+                blinki.setStart(false);
+
+                blinki.setX(blinki.XSTARTBLINKI);
+                blinki.setY(blinki.YSTARTBLINKI);
+            }
+        }
+        
 
     }
+
+}
+
+void Game::ContinueGame()
+{
+
+}
+
+void Game::OutputStat()
+{
+    using namespace std;
+    system("cls");
+    ifstream in("stat.txt");
+    string stat;
+
+    if (in.is_open())
+    {
+        while (getline(in, stat))
+        {
+            cout << stat << endl;
+        }
+    }
+
+    in.close();
+
+    while (!(_getch() == BACK))
+    {
+
+    }
+
 
 }

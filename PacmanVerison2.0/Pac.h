@@ -13,7 +13,6 @@ public:
     Pac();
     ~Pac();
     short x, y;
-    short life;
     enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
     eDirection dir;
 
@@ -21,13 +20,19 @@ public:
     void MoveLeft();
     void MoveUp();
     void MoveDown();
+    void changeScore(int s);
+    void setScore();
     int getScore() const;
+
+    void setLife(short life);
+    short getLife() const;
+    void changeLife();
 
 private:
     //Map map;
 
     int score = 0;
-
+    short m_life;
 };
 
 #endif // PAC_H

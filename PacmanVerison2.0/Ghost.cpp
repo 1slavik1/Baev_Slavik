@@ -7,6 +7,7 @@ Ghost::Ghost()
 {
     m_start = false;
     m_freedom = false;
+    m_frightened = false;
 }
 
 
@@ -26,9 +27,24 @@ short Ghost::getMode() const { return m_mode; }
 void Ghost::setFreedom(bool freedom) { m_freedom = freedom; }
 void Ghost::setStart(bool start) { m_start = start; }
 
+short Ghost::getOldX() const { return m_oldX; }
+short Ghost::getOldY() const { return m_oldY; }
+
+short Ghost::getXRandom()
+{
+    return rand() % 49;
+}
+
+short Ghost::getYRandom()
+{
+    return rand() % 22;
+}
+
 void Ghost::DrawPlayer(short x, short y)
 {
-    draw.DrawPlayer(color, name, x, y);
+    if(!m_frightened) draw.DrawPlayer(color, name, x, y);
+    else draw.DrawPlayer(1, name, x, y);
+    
 }
 
 void Ghost::ClearPlayer(short x, short y)
@@ -36,7 +52,11 @@ void Ghost::ClearPlayer(short x, short y)
     draw.Clear(x, y);
 }
 
-
+void Ghost::DrawLife(short life)
+{
+    draw.setDrawLife();
+    std::cout << life << std::endl;
+}
 
 void Ghost::DrawScore(int &score)
 {

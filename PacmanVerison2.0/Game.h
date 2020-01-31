@@ -49,6 +49,7 @@ private:
     bool m_error;
     bool m_save;
     bool m_stop;
+    short m_count = 0;
     void StartNewGame();
     void GameDraw();
     void GameSetup();
@@ -56,8 +57,11 @@ private:
     void GamePause();
     void GameLogic();
     void LogicBlinki();
+    //void LogicPac();
     void StartTimer();
     void Volna();
+    void OutputStat();
+    void ContinueGame();
 };
 
 #endif // GAME_H

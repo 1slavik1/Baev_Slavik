@@ -35,10 +35,13 @@ short Map::map[HEIGHT][WIDTH] = {
                     {1,1,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,0,2,1,1},
                     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} };
 
+short Map::getHeight() const { return HEIGHT; }
+short Map::getWidth() const { return WIDTH; }
 
 void Map::DrawMap()
 {
     draw.DrawMap(HEIGHT, WIDTH, map);
+
 }
 
 short Map::getMap(short x, short y) const
@@ -51,4 +54,9 @@ void Map::setMap(short x, short y)
 {
     map[y][x] = 2;
 
+}
+
+void Map::mapUpdate()
+{
+    memcpy(map, mapOrigin, sizeof(map));
 }

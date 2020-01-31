@@ -93,3 +93,15 @@ void Draw::SetDrawScore()
 
 }
 
+void Draw::setDrawTime()
+{
+    cursor.SetCursor(0, 24);
+
+}
+
+void Draw::setDrawLife()
+{
+    cursor.SetCursor(7, 24);
+
+}
+

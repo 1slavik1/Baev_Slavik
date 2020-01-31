@@ -5,6 +5,7 @@ Blinki::Blinki()
 {
     Ghost::color = RED;
     Ghost::name = NAME;
+    Ghost:m_frightened = false;
 }
 
 Blinki::~Blinki()
@@ -14,8 +15,7 @@ Blinki::~Blinki()
 
 void Blinki::Logic(int xPac, int yPac)
 {
-    //Ghost::Logic(xPac, yPac);
-
+   
     switch (getMode())
     {
     case Ghost::SCATTER:
@@ -25,7 +25,7 @@ void Blinki::Logic(int xPac, int yPac)
         Ghost::chase(xPac, yPac);
         break;
     case Ghost::FRIGHTENED:
-        //chase(Ghost::getXRandom(), Ghost::getYRandom()); // FRIGHTENED
+        chase(Ghost::getXRandom(), Ghost::getYRandom()); // FRIGHTENED
         break;
     default:
         break;
